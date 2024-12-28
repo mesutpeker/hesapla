@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Not Değerlendirme Tablosu</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="settings-panel print:hidden">
+            <h3>Başlık ve Öğretmen Bilgileri</h3>
+            <div class="form-group">
+                <label>Eğitim Yılı:</label>
+                <input type="text" id="educationYear" value="2023-2024 EĞİTİM ÖĞRETİM YILI">
+            </div>
+            <div class="form-group">
+                <label>Okul Adı:</label>
+                <input type="text" id="schoolName" value="KARAMAN MESLEKİ VE TEKNİK ANADOLU LİSESİ">
+            </div>
+            <div class="form-group">
+                <label>Öğretmen Adı Soyadı:</label>
+                <input type="text" id="teacherName" value="EMRE YAMANER">
+            </div>
+            <div class="form-group">
+                <label>Öğretmen Ünvanı:</label>
+                <input type="text" id="teacherTitle" value="Türk Dili ve Edebiyatı Öğretmeni">
+            </div>
+            <button onclick="updateHeaderInfo()" class="btn btn-3d">Bilgileri Güncelle</button>
+        </div>
+
+        <div class="controls print:hidden">
+            <button id="addStudentBtn" class="btn btn-3d">
+                Öğrenci Ekle
+            </button>
+            <button id="printBtn" class="btn btn-3d btn-print">
+                Yazdır
+            </button>
+        </div>
+
+        <div id="studentModal" class="modal">
+            <div class="modal-content red-theme">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Yeni Öğrenci Ekle</h2>
+                </div>
+                <form id="studentForm">
+                    <input type="hidden" id="studentId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Okul No:</label>
+                            <input type="text" id="studentNo" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Adı Soyadı:</label>
+                            <input type="text" id="studentName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grade-section">
+                        <h3>1. Yazılı</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Yazma:</label>
+                                <input type="number" id="yazili1_yazma" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Dinleme:</label>
+                                <input type="number" id="yazili1_dinleme" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Konuşma:</label>
+                                <input type="number" id="yazili1_konusma" min="0" max="100" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grade-section">
+                        <h3>2. Yazılı</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Yazma:</label>
+                                <input type="number" id="yazili2_yazma" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Dinleme:</label>
+                                <input type="number" id="yazili2_dinleme" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Konuşma:</label>
+                                <input type="number" id="yazili2_konusma" min="0" max="100" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grade-section">
+                        <h3>1. Performans</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>1. Tema Yazma:</label>
+                                <input type="number" id="perf1_tema1_yazma" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>1. Tema Konuşma:</label>
+                                <input type="number" id="perf1_tema1_konusma" min="0" max="100" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>2. Tema Yazma:</label>
+                                <input type="number" id="perf1_tema2_yazma" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>2. Tema Konuşma:</label>
+                                <input type="number" id="perf1_tema2_konusma" min="0" max="100" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grade-section">
+                        <h3>2. Performans</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>1. Kitap:</label>
+                                <input type="number" id="perf2_kitap1" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>2. Kitap:</label>
+                                <input type="number" id="perf2_kitap2" min="0" max="100" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="cancelBtn" class="btn btn-3d btn-cancel">İptal</button>
+                        <button type="submit" class="btn btn-3d btn-save" id="saveBtn">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="printArea">
+            <div class="header">
+                <h1 id="headerYear">2023-2024 EĞİTİM ÖĞRETİM YILI</h1>
+                <h1 id="headerSchool">KARAMAN MESLEKİ VE TEKNİK ANADOLU LİSESİ</h1>
+                <h2>TÜRK DİLİ VE EDEBİYATI DERSİ DEĞERLENDİRME TABLOSU</h2>
+            </div>
+
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="border-right sticky-col">No</th>
+                                <th rowspan="2" class="border-right sticky-col">Adı Soyadı</th>
+                                <th colspan="4" class="section-header border-right">1. Yazılı</th>
+                                <th colspan="4" class="section-header border-right">2. Yazılı</th>
+                                <th colspan="5" class="section-header border-right">1. Performans</th>
+                                <th colspan="3" class="section-header">2. Performans</th>
+                                <th rowspan="2" class="print:hidden">İşlem</th>
+                            </tr>
+                            <tr class="subheader">
+                                <th class="small-header">Yazma<br><span class="percentage">%70</span></th>
+                                <th class="small-header">Dinleme<br><span class="percentage">%15</span></th>
+                                <th class="small-header">Konuşma<br><span class="percentage">%15</span></th>
+                                <th class="small-header border-right">Toplam</th>
+                                <th class="small-header">Yazma<br><span class="percentage">%70</span></th>
+                                <th class="small-header">Dinleme<br><span class="percentage">%15</span></th>
+                                <th class="small-header">Konuşma<br><span class="percentage">%15</span></th>
+                                <th class="small-header border-right">Toplam</th>
+                                <th class="small-header">1.Tema<br>Yazma<br><span class="percentage">%25</span></th>
+                                <th class="small-header">1.Tema<br>Konuşma<br><span class="percentage">%25</span></th>
+                                <th class="small-header">2.Tema<br>Yazma<br><span class="percentage">%25</span></th>
+                                <th class="small-header">2.Tema<br>Konuşma<br><span class="percentage">%25</span></th>
+                                <th class="small-header border-right">Toplam</th>
+                                <th class="small-header">1.Kitap<br><span class="percentage">%50</span></th>
+                                <th class="small-header">2.Kitap<br><span class="percentage">%50</span></th>
+                                <th class="small-header">Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p class="teacher-name" id="footerTeacher">EMRE YAMANER</p>
+                <p class="teacher-title" id="footerTitle">Türk Dili ve Edebiyatı Öğretmeni</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

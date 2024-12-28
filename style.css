@@ -1,0 +1,425 @@
+/* Temel Stiller */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    padding: 10px;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 1200px;
+        padding: 20px;
+    }
+}
+
+/* Başlık Stilleri */
+.header {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 900px;
+    padding: 0 10px;
+}
+
+.header h1 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.header h2 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Settings Panel Stilleri */
+.settings-panel {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.settings-panel h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Modern 3D Input Stilleri */
+input {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    background: #f8f9fa;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1),
+                inset -2px -2px 5px rgba(255,255,255,0.9),
+                2px 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    color: #2c3e50;
+}
+
+input:focus {
+    outline: none;
+    background: #fff;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1),
+                inset -1px -1px 3px rgba(255,255,255,0.9),
+                0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+/* Modern 3D Buton Stilleri */
+.btn-3d {
+    position: relative;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(145deg, #ff5544, #e74c3c);
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.btn-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-3d:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3),
+                0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-print {
+    background: linear-gradient(145deg, #3ea1e6, #3498db);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-save {
+    background: linear-gradient(145deg, #2ecc71, #27ae60);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.btn-cancel {
+    background: linear-gradient(145deg, #95a5a6, #7f8c8d);
+    box-shadow: 0 4px 15px rgba(127, 140, 141, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+/* Düzenle butonu */
+.btn-edit {
+    background: linear-gradient(145deg, #f39c12, #e67e22);
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    background: linear-gradient(145deg, #e67e22, #d35400);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Stilleri */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.modal-content.red-theme {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 95%;
+    max-width: 500px;
+    margin: 20px auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-top: 5px solid #e74c3c;
+}
+
+.modal-header {
+    background-color: #e74c3c;
+    margin: -15px -15px 15px -15px;
+    padding: 12px 15px;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-header h2 {
+    color: white;
+    margin: 0;
+    font-size: 1.3em;
+}
+
+.grade-section {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.grade-section h3 {
+    color: #e74c3c;
+    margin-bottom: 8px;
+    font-size: 1em;
+}
+
+/* Form Stilleri */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 2px;
+    color: #555;
+    font-size: 0.8em;
+}
+
+/* Tablo Stilleri */
+.table-container {
+    margin: 20px 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+/* Ana başlıklar için stil */
+.section-header {
+    background-color: #f4f4f4;
+    color: black;
+    font-weight: bold;
+    padding: 8px 4px;
+    text-align: center;
+}
+
+/* Alt başlıklar için stil */
+tr.subheader th {
+    background-color: #f9f9f9;
+    font-size: 10px;
+    padding: 8px 4px;
+    height: 40px;
+}
+
+/* Zebra çizgili satırlar */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+th, td {
+    border: 1px solid #000;
+    padding: 6px;
+    text-align: center;
+    font-size: 11px;
+}
+
+th {
+    font-weight: bold;
+    color: #333;
+}
+
+.small-header {
+    font-size: 10px;
+    padding: 4px;
+    line-height: 1.2;
+}
+
+/* Bölüm Ayırıcıları */
+.border-right {
+    border-right: 2px solid #000 !important;
+}
+
+/* Footer Stilleri */
+.footer {
+    text-align: right;
+    margin-top: 20px;
+    padding-right: 20px;
+}
+
+.teacher-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.teacher-title {
+    font-size: 12px;
+}
+
+/* Yazdırma Stilleri */
+@media print {
+    @page {
+        size: landscape;
+        margin: 1.5cm;
+    }
+
+    body {
+        padding: 0;
+        background: none;
+    }
+
+    .settings-panel,
+    .controls, 
+    .btn,
+    .btn-edit,
+    .print\:hidden {
+        display: none !important;
+    }
+
+    .header {
+        margin: 0 auto 15px;
+    }
+
+    .header h1 {
+        font-size: 14pt;
+        margin-bottom: 4pt;
+    }
+
+    .header h2 {
+        font-size: 12pt;
+    }
+
+    .table-container {
+        box-shadow: none;
+        margin: 0;
+        background: none;
+    }
+
+    table {
+        font-size: 8pt;
+        border: 1px solid #000;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 3px;
+    }
+
+    /* Yazdırmada zebra çizgili satırlar ve başlıklar */
+    .section-header {
+        background-color: #f4f4f4 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    tr.subheader th {
+        background-color: #f9f9f9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .footer {
+        margin-top: 15px;
+        font-size: 10pt;
+    }
+}
+
+/* Modal Açık/Kapalı Durumu */
+.modal.show {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 768px) {
+    .modal-content.red-theme {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    input {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .btn-3d {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Yazdırma medya sorgusundan da kaldırılacak */
+@media print {
+    /* .percentage-row th {
+        font-size: 7pt;
+        background-color: #f9f9f9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    } */
+}
