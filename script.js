@@ -64,6 +64,78 @@ function calculatePerformans2Total(kitap1, kitap2) {
     return Math.round((kitap1 * 0.5) + (kitap2 * 0.5));
 }
 
+// Toplamdan detaylara dağıtım fonksiyonları
+function distributeYaziliFromTotal(total) {
+    // Hedef toplam değer
+    const targetTotal = parseInt(total) || 0;
+    
+    // Yazma %70, Dinleme %15, Konuşma %15 oranlarına göre dağıt
+    // Ancak birbirinden farklı notlar olsun
+    let yazma = Math.round(targetTotal * 0.95); // Ana not biraz düşük
+    let dinleme = Math.min(100, yazma + Math.round(Math.random() * 10) + 5); // 5-15 puan fazla
+    let konusma = Math.min(100, yazma + Math.round(Math.random() * 10) + 5); // 5-15 puan fazla
+    
+    // Gerçek toplamı hesapla ve hedefle karşılaştır
+    let currentTotal = calculateYaziliTotal(yazma, dinleme, konusma);
+    let diff = targetTotal - currentTotal;
+    
+    // Farkı yazma notuna ekle/çıkar
+    yazma = Math.max(0, Math.min(100, yazma + Math.round(diff / 0.7)));
+    
+    return { yazma, dinleme, konusma };
+}
+
+function distributePerformans1FromTotal(total) {
+    // Her biri %25 - farklı notlar
+    const targetTotal = parseInt(total) || 0;
+    const baseScore = targetTotal - 5; // Temel not
+    
+    // Her birine farklı değerler ata
+    let tema1Yazma = Math.max(0, Math.min(100, baseScore + Math.round(Math.random() * 10)));
+    let tema1Konusma = Math.max(0, Math.min(100, baseScore + Math.round(Math.random() * 10)));
+    let tema2Yazma = Math.max(0, Math.min(100, baseScore + Math.round(Math.random() * 10)));
+    let tema2Konusma = Math.max(0, Math.min(100, baseScore + Math.round(Math.random() * 10)));
+    
+    // Toplamı kontrol et ve ayarla
+    let currentTotal = calculatePerformans1Total(tema1Yazma, tema1Konusma, tema2Yazma, tema2Konusma);
+    let diff = targetTotal - currentTotal;
+    
+    // Farkı dağıt
+    if (diff !== 0) {
+        tema1Yazma = Math.max(0, Math.min(100, tema1Yazma + Math.round(diff / 4)));
+    }
+    
+    return {
+        tema1Yazma,
+        tema1Konusma,
+        tema2Yazma,
+        tema2Konusma
+    };
+}
+
+function distributePerformans2FromTotal(total) {
+    // Her kitap %50 - farklı notlar
+    const targetTotal = parseInt(total) || 0;
+    
+    // İki kitaba farklı notlar ver
+    let kitap1 = Math.max(0, Math.min(100, targetTotal - Math.round(Math.random() * 5) - 2));
+    let kitap2 = Math.max(0, Math.min(100, targetTotal + Math.round(Math.random() * 5) + 2));
+    
+    // Toplamı kontrol et ve ayarla
+    let currentTotal = calculatePerformans2Total(kitap1, kitap2);
+    let diff = targetTotal - currentTotal;
+    
+    // Farkı kitap1'e ekle
+    if (diff !== 0) {
+        kitap1 = Math.max(0, Math.min(100, kitap1 + diff * 2));
+    }
+    
+    return {
+        kitap1,
+        kitap2
+    };
+}
+
 // Öğrenci düzenleme formu doldurma
 function editStudent(studentId) {
     // Öğrenciyi number'a göre bul
@@ -151,6 +223,126 @@ function distributeGrades(formData) {
     };
 }
 
+// Toplam not girişinden detaylara dağıtım
+function updateGradesFromTotal(studentNumber, gradeType, totalValue) {
+    const student = students.find(s => s.number === studentNumber.toString());
+    if (!student) return;
+
+    const numValue = parseInt(totalValue) || 0;
+    
+    if (gradeType === 'yazili1') {
+        const distributed = distributeYaziliFromTotal(numValue);
+        student.yazili1 = {
+            yazma: distributed.yazma,
+            dinleme: distributed.dinleme,
+            konusma: distributed.konusma,
+            toplam: numValue
+        };
+    } else if (gradeType === 'yazili2') {
+        const distributed = distributeYaziliFromTotal(numValue);
+        student.yazili2 = {
+            yazma: distributed.yazma,
+            dinleme: distributed.dinleme,
+            konusma: distributed.konusma,
+            toplam: numValue
+        };
+    } else if (gradeType === 'performans1') {
+        const distributed = distributePerformans1FromTotal(numValue);
+        student.performans1 = {
+            tema1: {
+                yazma: distributed.tema1Yazma,
+                konusma: distributed.tema1Konusma
+            },
+            tema2: {
+                yazma: distributed.tema2Yazma,
+                konusma: distributed.tema2Konusma
+            },
+            toplam: numValue
+        };
+    } else if (gradeType === 'performans2') {
+        const distributed = distributePerformans2FromTotal(numValue);
+        student.performans2 = {
+            kitap1: distributed.kitap1,
+            kitap2: distributed.kitap2,
+            toplam: numValue
+        };
+    }
+
+    // LocalStorage'a kaydet
+    saveToLocalStorage();
+    
+    // Tabloyu güncelle
+    updateTable();
+}
+
+// Tablo hücresinde not güncelleme fonksiyonu
+function updateGrade(studentNumber, gradeType, subType, value) {
+    const student = students.find(s => s.number === studentNumber.toString());
+    if (!student) return;
+
+    const numValue = parseInt(value) || 0;
+    
+    // Notu güncelle
+    if (gradeType === 'yazili1') {
+        if (!student.yazili1) student.yazili1 = {};
+        student.yazili1[subType] = numValue;
+        student.yazili1.toplam = calculateYaziliTotal(
+            student.yazili1.yazma || 0,
+            student.yazili1.dinleme || 0,
+            student.yazili1.konusma || 0
+        );
+    } else if (gradeType === 'yazili2') {
+        if (!student.yazili2) student.yazili2 = {};
+        student.yazili2[subType] = numValue;
+        student.yazili2.toplam = calculateYaziliTotal(
+            student.yazili2.yazma || 0,
+            student.yazili2.dinleme || 0,
+            student.yazili2.konusma || 0
+        );
+    } else if (gradeType === 'performans1') {
+        if (!student.performans1) student.performans1 = { tema1: {}, tema2: {} };
+        if (subType.includes('tema1')) {
+            student.performans1.tema1[subType.replace('tema1-', '')] = numValue;
+        } else if (subType.includes('tema2')) {
+            student.performans1.tema2[subType.replace('tema2-', '')] = numValue;
+        }
+        student.performans1.toplam = calculatePerformans1Total(
+            student.performans1.tema1?.yazma || 0,
+            student.performans1.tema1?.konusma || 0,
+            student.performans1.tema2?.yazma || 0,
+            student.performans1.tema2?.konusma || 0
+        );
+    } else if (gradeType === 'performans2') {
+        if (!student.performans2) student.performans2 = {};
+        student.performans2[subType] = numValue;
+        student.performans2.toplam = calculatePerformans2Total(
+            student.performans2.kitap1 || 0,
+            student.performans2.kitap2 || 0
+        );
+    }
+
+    // LocalStorage'a kaydet
+    saveToLocalStorage();
+    
+    // Toplamları güncelle
+    updateTableTotals(studentNumber);
+}
+
+// Sadece toplamları güncelleme fonksiyonu
+function updateTableTotals(studentNumber) {
+    const row = document.querySelector(`tr[data-student="${studentNumber}"]`);
+    if (!row) return;
+    
+    const student = students.find(s => s.number === studentNumber.toString());
+    if (!student) return;
+
+    // Toplamları güncelle
+    row.querySelector('[data-total="yazili1"]').value = student.yazili1?.toplam || 0;
+    row.querySelector('[data-total="yazili2"]').value = student.yazili2?.toplam || 0;
+    row.querySelector('[data-total="performans1"]').value = student.performans1?.toplam || 0;
+    row.querySelector('[data-total="performans2"]').value = student.performans2?.toplam || 0;
+}
+
 // Tabloyu güncelleme fonksiyonu
 function updateTable() {
     studentTableBody.innerHTML = '';
@@ -160,25 +352,26 @@ function updateTable() {
     
     students.forEach(student => {
         const row = document.createElement('tr');
+        row.setAttribute('data-student', student.number);
         row.innerHTML = `
             <td class="border-right">${student.number}</td>
             <td class="border-right">${student.name}</td>
-            <td>${student.yazili1?.yazma || 0}</td>
-            <td>${student.yazili1?.dinleme || 0}</td>
-            <td>${student.yazili1?.konusma || 0}</td>
-            <td class="border-right"><strong>${student.yazili1?.toplam || 0}</strong></td>
-            <td>${student.yazili2?.yazma || 0}</td>
-            <td>${student.yazili2?.dinleme || 0}</td>
-            <td>${student.yazili2?.konusma || 0}</td>
-            <td class="border-right"><strong>${student.yazili2?.toplam || 0}</strong></td>
-            <td>${student.performans1?.tema1?.yazma || 0}</td>
-            <td>${student.performans1?.tema1?.konusma || 0}</td>
-            <td>${student.performans1?.tema2?.yazma || 0}</td>
-            <td>${student.performans1?.tema2?.konusma || 0}</td>
-            <td class="border-right"><strong>${student.performans1?.toplam || 0}</strong></td>
-            <td>${student.performans2?.kitap1 || 0}</td>
-            <td>${student.performans2?.kitap2 || 0}</td>
-            <td><strong>${student.performans2?.toplam || 0}</strong></td>
+            <td><input type="number" value="${student.yazili1?.yazma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'yazili1', 'yazma', this.value)"></td>
+            <td><input type="number" value="${student.yazili1?.dinleme || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'yazili1', 'dinleme', this.value)"></td>
+            <td><input type="number" value="${student.yazili1?.konusma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'yazili1', 'konusma', this.value)"></td>
+            <td class="border-right"><input type="number" value="${student.yazili1?.toplam || 0}" min="0" max="100" class="table-input total-input" data-total="yazili1" onchange="updateGradesFromTotal('${student.number}', 'yazili1', this.value)"></td>
+            <td><input type="number" value="${student.yazili2?.yazma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'yazili2', 'yazma', this.value)"></td>
+            <td><input type="number" value="${student.yazili2?.dinleme || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'yazili2', 'dinleme', this.value)"></td>
+            <td><input type="number" value="${student.yazili2?.konusma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'yazili2', 'konusma', this.value)"></td>
+            <td class="border-right"><input type="number" value="${student.yazili2?.toplam || 0}" min="0" max="100" class="table-input total-input" data-total="yazili2" onchange="updateGradesFromTotal('${student.number}', 'yazili2', this.value)"></td>
+            <td><input type="number" value="${student.performans1?.tema1?.yazma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'performans1', 'tema1-yazma', this.value)"></td>
+            <td><input type="number" value="${student.performans1?.tema1?.konusma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'performans1', 'tema1-konusma', this.value)"></td>
+            <td><input type="number" value="${student.performans1?.tema2?.yazma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'performans1', 'tema2-yazma', this.value)"></td>
+            <td><input type="number" value="${student.performans1?.tema2?.konusma || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'performans1', 'tema2-konusma', this.value)"></td>
+            <td class="border-right"><input type="number" value="${student.performans1?.toplam || 0}" min="0" max="100" class="table-input total-input" data-total="performans1" onchange="updateGradesFromTotal('${student.number}', 'performans1', this.value)"></td>
+            <td><input type="number" value="${student.performans2?.kitap1 || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'performans2', 'kitap1', this.value)"></td>
+            <td><input type="number" value="${student.performans2?.kitap2 || 0}" min="0" max="100" class="table-input" onchange="updateGrade('${student.number}', 'performans2', 'kitap2', this.value)"></td>
+            <td><input type="number" value="${student.performans2?.toplam || 0}" min="0" max="100" class="table-input total-input" data-total="performans2" onchange="updateGradesFromTotal('${student.number}', 'performans2', this.value)"></td>
             <td class="print:hidden">
                 <button onclick="editStudent('${student.number}')" class="btn-edit">Düzenle</button>
             </td>
@@ -582,3 +775,4 @@ document.getElementById('clearBtn').addEventListener('click', () => {
         saveToLocalStorage();
     }
 });
+

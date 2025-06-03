@@ -19,7 +19,7 @@ body {
 
 @media (min-width: 768px) {
     .container {
-        max-width: 1200px;
+        max-width: 100%;
         padding: 20px;
     }
 }
@@ -78,6 +78,35 @@ input:focus {
     box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1),
                 inset -1px -1px 3px rgba(255,255,255,0.9),
                 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+/* Tablo içindeki input stilleri */
+.table-input {
+    width: 40px;
+    padding: 2px 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 10px;
+    text-align: center;
+    background: #fff;
+    box-shadow: none;
+    transition: all 0.2s ease;
+    -moz-appearance: textfield; /* Firefox'ta okları kaldır */
+    appearance: textfield;
+}
+
+/* Chrome, Safari, Edge, Opera'da number input oklarını kaldır */
+.table-input::-webkit-inner-spin-button,
+.table-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.table-input:focus {
+    border-color: #e74c3c;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
+    background: #fff;
 }
 
 /* Modern 3D Buton Stilleri */
@@ -231,16 +260,20 @@ input:focus {
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
+    overflow-x: auto;
 }
 
 .table-wrapper {
     overflow-x: auto;
+    width: 100%;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     white-space: nowrap;
+    table-layout: auto;
 }
 
 /* Ana başlıklar için stil */
@@ -248,16 +281,17 @@ table {
     background-color: #f4f4f4;
     color: black;
     font-weight: bold;
-    padding: 8px 4px;
+    padding: 4px 2px;
     text-align: center;
+    font-size: 9px;
 }
 
 /* Alt başlıklar için stil */
 tr.subheader th {
     background-color: #f9f9f9;
-    font-size: 10px;
-    padding: 8px 4px;
-    height: 40px;
+    font-size: 8px;
+    padding: 4px 2px;
+    height: 30px;
 }
 
 /* Zebra çizgili satırlar */
@@ -271,9 +305,9 @@ tbody tr:nth-child(odd) {
 
 th, td {
     border: 1px solid #000;
-    padding: 6px;
+    padding: 3px;
     text-align: center;
-    font-size: 11px;
+    font-size: 9px;
 }
 
 th {
@@ -282,8 +316,8 @@ th {
 }
 
 .small-header {
-    font-size: 10px;
-    padding: 4px;
+    font-size: 8px;
+    padding: 2px;
     line-height: 1.2;
 }
 
@@ -312,13 +346,26 @@ th {
 /* Yazdırma Stilleri */
 @media print {
     @page {
-        size: landscape;
-        margin: 1.5cm;
+        size: A4 landscape;
+        margin: 10mm;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
 
     body {
         padding: 0;
-        background: none;
+        background: white;
+        margin: 0;
+    }
+
+    .container {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
     }
 
     .settings-panel,
@@ -329,59 +376,151 @@ th {
         display: none !important;
     }
 
+    /* Yazdırmada input değerlerini göster */
+    .table-input {
+        border: none !important;
+        background: transparent !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: auto !important;
+        font-size: 7pt !important;
+        color: black !important;
+    }
+
     .header {
-        margin: 0 auto 15px;
+        margin: 0 0 10px 0;
+        padding: 0;
     }
 
     .header h1 {
-        font-size: 14pt;
-        margin-bottom: 4pt;
+        font-size: 12pt;
+        margin-bottom: 3pt;
     }
 
     .header h2 {
-        font-size: 12pt;
+        font-size: 10pt;
     }
 
     .table-container {
-        box-shadow: none;
+        box-shadow: none !important;
         margin: 0;
         background: none;
+        border-radius: 0;
+        padding: 0;
+    }
+
+    .table-wrapper {
+        overflow: visible !important;
     }
 
     table {
-        font-size: 8pt;
-        border: 1px solid #000;
+        font-size: 7pt;
+        border: 2px solid #000 !important;
+        border-collapse: collapse;
         width: 100%;
-        margin: 0 auto;
+        margin: 0;
     }
 
     th, td {
-        border: 1px solid #000;
-        padding: 3px;
+        border: 1px solid #000 !important;
+        padding: 2px !important;
+        font-size: 7pt !important;
+        line-height: 1.2;
     }
 
-    /* Yazdırmada zebra çizgili satırlar ve başlıklar */
-    .section-header {
+    th {
+        font-weight: bold;
         background-color: #f4f4f4 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
     }
 
+    /* Ana başlıklar */
+    .section-header {
+        background-color: #e0e0e0 !important;
+        font-weight: bold;
+        font-size: 8pt !important;
+        border: 1px solid #000 !important;
+    }
+
+    /* Alt başlıklar */
     tr.subheader th {
-        background-color: #f9f9f9 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        background-color: #f0f0f0 !important;
+        font-size: 7pt !important;
+        padding: 3px 2px !important;
     }
 
+    .small-header {
+        font-size: 6pt !important;
+    }
+
+    .small-header .percentage {
+        font-size: 6pt !important;
+        display: block;
+    }
+
+    /* Zebra çizgili satırlar */
     tbody tr:nth-child(even) {
-        background-color: #f9f9f9 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        background-color: #fafafa !important;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: white !important;
+    }
+
+    /* Kalın kenarlıklar */
+    .border-right {
+        border-right: 2px solid #000 !important;
     }
 
     .footer {
-        margin-top: 15px;
+        margin-top: 10px;
+        padding: 0;
+        font-size: 9pt;
+        text-align: right;
+    }
+
+    .teacher-name {
         font-size: 10pt;
+        margin-bottom: 2px;
+    }
+
+    .teacher-title {
+        font-size: 9pt;
+    }
+
+    /* Hücre içeriğinin kesilmemesi için */
+    td, th {
+        white-space: nowrap;
+        overflow: visible !important;
+    }
+
+    /* Satır sonlarının kesilmemesi */
+    tr {
+        page-break-inside: avoid;
+    }
+
+    /* Tablo başlığının sayfada kalması */
+    thead {
+        display: table-header-group;
+    }
+
+    /* Son sütunun görünmesi için */
+    table tr td:last-child,
+    table tr th:last-child {
+        border-right: 1px solid #000 !important;
+    }
+
+    /* Alt satırın görünmesi için */
+    table tr:last-child td,
+    table tr:last-child th {
+        border-bottom: 1px solid #000 !important;
+    }
+
+    /* Tablonun dış çerçevesi */
+    table {
+        outline: 2px solid #000;
     }
 }
 
@@ -412,16 +551,12 @@ th {
         padding: 12px 20px;
         font-size: 14px;
     }
-}
 
-/* Yazdırma medya sorgusundan da kaldırılacak */
-@media print {
-    /* .percentage-row th {
-        font-size: 7pt;
-        background-color: #f9f9f9 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    } */
+    .table-input {
+        width: 35px;
+        font-size: 9px;
+        padding: 1px 2px;
+    }
 }
 
 /* Import modal stilleri */
